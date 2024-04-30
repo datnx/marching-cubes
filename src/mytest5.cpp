@@ -8,6 +8,9 @@
 #include "vessel.h"
 #include <vector>
 #include <map>
+#include <imgui.h>
+#include <backends/imgui_impl_glut.h>
+#include <backends/imgui_impl_opengl3.h>
 
 const double M_PI = 3.14159265359;
 
@@ -116,27 +119,33 @@ void display() {
 
 void mouse(int button, int state, int x, int y) {
 
-    int x_ = y, y_ = x;
-
-    if (button == GLUT_LEFT_BUTTON) {
-        if (state == GLUT_UP) {
-            // Do Nothing;
-        }
-        else if (state == GLUT_DOWN) {
-            mouseoldx = x_;
-            mouseoldy = y_;
-        }
+    ImGuiIO& io = ImGui::GetIO();
+    if (io.WantCaptureMouse) {
+        ImGui_ImplGLUT_MouseFunc(button, state, x, y);
     }
-    else if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN) {
-        eye = eyeinit;
+    else {
+        int x_ = y, y_ = x;
 
-        lightdir = normalize(eye);
-        glUniform3f(lightdirPos, lightdir[0], lightdir[1], lightdir[2]);
+        if (button == GLUT_LEFT_BUTTON) {
+            if (state == GLUT_UP) {
+                // Do Nothing;
+            }
+            else if (state == GLUT_DOWN) {
+                mouseoldx = x_;
+                mouseoldy = y_;
+            }
+        }
+        else if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN) {
+            eye = eyeinit;
 
-        up = upinit;
-        modelview = lookAt(eye, center, up);
-        glUniformMatrix4fv(modelviewPos, 1, GL_FALSE, &modelview[0][0]);
-        glutPostRedisplay();
+            lightdir = normalize(eye);
+            glUniform3f(lightdirPos, lightdir[0], lightdir[1], lightdir[2]);
+
+            up = upinit;
+            modelview = lookAt(eye, center, up);
+            glUniformMatrix4fv(modelviewPos, 1, GL_FALSE, &modelview[0][0]);
+            glutPostRedisplay();
+        }
     }
 }
 
@@ -189,42 +198,56 @@ float cos_vec_2d(glm::vec2 vec1, glm::vec2 vec2) {
 }
 
 void mousedrag(int x, int y) {
-    int x_ = y, y_ = x;
-    if (x_ - mouseoldx == 0 && y_ - mouseoldy == 0) return;
-    glm::vec2 drag = glm::vec2(x_ - mouseoldx, y_ - mouseoldy);
-    drag = rotate_2d(-M_PI / 2) * drag;
-    float cos_screen_up_drag = cos_vec_2d(screen_up, drag);
-    float sin_screen_up_drag = sqrt(1 - cos_screen_up_drag * cos_screen_up_drag);
-    if (drag[1] > 0) {
-        sin_screen_up_drag = -sin_screen_up_drag;
+
+    ImGuiIO& io = ImGui::GetIO();
+    if (io.WantCaptureMouse) {
+        ImGui_ImplGLUT_MotionFunc(x, y);
     }
-    glm::vec3 rotation_axis = rotate_3d_with_cos_sin(eye - center, cos_screen_up_drag, sin_screen_up_drag) * up;
-    float rotation_angle = 0.005 * magnitude_2d(drag);
-    float degrees = rotation_angle * 180 / M_PI;
-    glm::mat3 rotation_matrix = rotate_3d(rotation_axis, rotation_angle);
-    eye = rotation_matrix * eye;
+    else {
+        int x_ = y, y_ = x;
+        if (x_ - mouseoldx == 0 && y_ - mouseoldy == 0) return;
+        glm::vec2 drag = glm::vec2(x_ - mouseoldx, y_ - mouseoldy);
+        drag = rotate_2d(-M_PI / 2) * drag;
+        float cos_screen_up_drag = cos_vec_2d(screen_up, drag);
+        float sin_screen_up_drag = sqrt(1 - cos_screen_up_drag * cos_screen_up_drag);
+        if (drag[1] > 0) {
+            sin_screen_up_drag = -sin_screen_up_drag;
+        }
+        glm::vec3 rotation_axis = rotate_3d_with_cos_sin(eye - center, cos_screen_up_drag, sin_screen_up_drag) * up;
+        float rotation_angle = 0.005 * magnitude_2d(drag);
+        float degrees = rotation_angle * 180 / M_PI;
+        glm::mat3 rotation_matrix = rotate_3d(rotation_axis, rotation_angle);
+        eye = rotation_matrix * eye;
 
-    lightdir = normalize(eye);
-    glUniform3f(lightdirPos, lightdir[0], lightdir[1], lightdir[2]);
+        lightdir = normalize(eye);
+        glUniform3f(lightdirPos, lightdir[0], lightdir[1], lightdir[2]);
 
-    up = rotation_matrix * up;
-    mouseoldx = x_;
-    mouseoldy = y_;
-    modelview = lookAt(eye, center, up);
-    glUniformMatrix4fv(modelviewPos, 1, GL_FALSE, &modelview[0][0]);
-    glutPostRedisplay();
+        up = rotation_matrix * up;
+        mouseoldx = x_;
+        mouseoldy = y_;
+        modelview = lookAt(eye, center, up);
+        glUniformMatrix4fv(modelviewPos, 1, GL_FALSE, &modelview[0][0]);
+        glutPostRedisplay();
+    }
 }
 
 void keyboard(unsigned char key, int x, int y) {
-    switch (key)
-    {
-    case 27:
-        deleteBuffers();
-        exit(0);
-        break;
     
-    default:
-        break;
+    ImGuiIO& io = ImGui::GetIO();
+    if (io.WantCaptureKeyboard) {
+        ImGui_ImplGLUT_KeyboardFunc(key, x, y);
+    }
+    else {
+        switch (key)
+        {
+        case 27:
+            deleteBuffers();
+            exit(0);
+            break;
+
+        default:
+            break;
+        }
     }
 }
 
@@ -237,6 +260,7 @@ void reshape(int w, int h) {
     glViewport(0, 0, (GLsizei)w, (GLsizei)h);
     projection = perspective(30 * M_PI / 180, (float)w / h, 300, 800);
     glUniformMatrix4fv(projectionPos, 1, GL_FALSE, &projection[0][0]);
+    ImGui_ImplGLUT_ReshapeFunc(w, h);
 }
 
 void init() {
@@ -292,15 +316,39 @@ int main(int argc, char** argv) {
         std::cerr << "Error " << glewGetString(err) << std::endl;
     }
 
+    // Setup Dear ImGui context
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+
+    // Setup Dear ImGui style
+    ImGui::StyleColorsDark();
+
+    // Setup Platform/Renderer backends
+    ImGui_ImplGLUT_Init();
+    ImGui_ImplOpenGL3_Init();
+
     init();
 
+    // Install GLUT handlers
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
     glutKeyboardFunc(keyboard);
     glutMouseFunc(mouse);
     glutMotionFunc(mousedrag);
+    glutPassiveMotionFunc(ImGui_ImplGLUT_MotionFunc);
+    glutKeyboardUpFunc(ImGui_ImplGLUT_KeyboardUpFunc);
+    glutSpecialFunc(ImGui_ImplGLUT_SpecialFunc);
+    glutSpecialUpFunc(ImGui_ImplGLUT_SpecialUpFunc);
 
     glutMainLoop();
     deleteBuffers();
+
+    // Cleanup
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGLUT_Shutdown();
+    ImGui::DestroyContext();
+
     return 0;
 }
