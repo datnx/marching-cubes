@@ -38,42 +38,6 @@ GLsizei NumElems[numobjects];
 
 enum {Vertices, Colors, Normals, Elements};
 
-const GLfloat rectangular_cuboid_vertices[8][3] = {
-    {-145.92, -145.92, 103.2},
-    {-145.92, 145.92, 103.2},
-    {-145.92, -145.92, -103.2},
-    {-145.92, 145.92, -103.2},
-    {145.92, -145.92, 103.2},
-    {145.92, 145.92, 103.2},
-    {145.92, -145.92, -103.2},
-    {145.92, 145.92, -103.2}
-};
-const GLfloat rectangular_cuboid_colors[8][3] = {
-    {1, 0, 0},
-    {1, 0, 0},
-    {1, 0, 0},
-    {1, 0, 0},
-    {1, 0, 0},
-    {1, 0, 0},
-    {1, 0, 0},
-    {1, 0, 0}
-};
-const GLubyte rectangular_cuboid_indices[1][36] = {{0, 1, 2, 1, 2, 3, 0, 1, 4, 1, 4, 5, 1, 3, 5, 3, 5, 7, 2, 3, 6, 3, 6, 7, 0, 2, 4, 2, 4, 6, 4, 5, 6, 5, 6, 7}};
-
-const GLfloat squareverts[4][3] = {
-    {0, 145.92, 103.2},
-    {0, -145.92, 103.2},
-    {0, -145.92, -103.2},
-    {0, 145.92, -103.2}
-};
-const GLfloat squarecol[4][3] = {
-    {1, 0, 0},
-    {1, 0, 0},
-    {1, 0, 0},
-    {1, 0, 0}
-};
-const GLubyte squareinds[1][6] = {{0, 1, 2, 0, 2, 3}};
-
 void deleteBuffers() {
     glDeleteVertexArrays(numobjects, VAOs);
     glDeleteBuffers(numperobj * numobjects, buffers);
@@ -107,7 +71,6 @@ glm::mat4 lookAt(glm::vec3 eye, glm::vec3 center, glm::vec3 up) {
 }
 
 void initobject(GLuint object, GLfloat *vert, GLint sizevert, GLfloat *col, GLint sizecol, GLfloat *nor, GLint sizenor, GLuint *inds, GLint sizeind, GLenum type) {
-// void initobject(GLuint object, GLfloat *vert, GLint sizevert, GLfloat *col, GLint sizecol, GLubyte *inds, GLint sizeind, GLenum type) {
     int offset = object * numperobj;
     glBindVertexArray(VAOs[object]);
     
@@ -293,8 +256,6 @@ void init() {
     glGenBuffers(numperobj * numobjects, buffers);
 
     initobject(0, (GLfloat*)&vertices[0], vertices.size() * 4, (GLfloat*)&colors[0], colors.size() * 4, (GLfloat*)&normals[0], normals.size() * 4, (GLuint*)&indices[0], indices.size() * 4, GL_TRIANGLES);
-    // initobject(0, (GLfloat*)squareverts, sizeof(squareverts), (GLfloat*)squarecol, sizeof(squarecol), (GLubyte*)squareinds, sizeof(squareinds), GL_TRIANGLES);
-    // initobject(0, (GLfloat*)rectangular_cuboid_vertices, sizeof(rectangular_cuboid_vertices), (GLfloat*)rectangular_cuboid_colors, sizeof(rectangular_cuboid_colors), (GLubyte*)rectangular_cuboid_indices, sizeof(rectangular_cuboid_indices), GL_TRIANGLES);
 
     vertexshader = initshaders(GL_VERTEX_SHADER, "shaders/vessel.vert");
     fragmentshader = initshaders(GL_FRAGMENT_SHADER, "shaders/vessel.frag");
