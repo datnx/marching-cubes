@@ -9,9 +9,9 @@ set(GLEW_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/external/glew-cmake/include")
 set(IMGUI_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/external/imgui/")
 
 set(MC_SOURCE
-	${PROJECT_SOURCE_DIR}/src/mytest5.cpp
+	${PROJECT_SOURCE_DIR}/src/main.cpp
 	${PROJECT_SOURCE_DIR}/src/shaders.cpp
-	${PROJECT_SOURCE_DIR}/src/vessel.cpp
+	${PROJECT_SOURCE_DIR}/src/model.cpp
 	${PROJECT_SOURCE_DIR}/external/imgui/imgui.cpp
 	${PROJECT_SOURCE_DIR}/external/imgui/imgui_draw.cpp
 	${PROJECT_SOURCE_DIR}/external/imgui/imgui_widgets.cpp
@@ -21,7 +21,7 @@ set(MC_SOURCE
 
 set(MC_HEADERS
 	${PROJECT_SOURCE_DIR}/include/shaders.h
-	${PROJECT_SOURCE_DIR}/include/vessel.h
+	${PROJECT_SOURCE_DIR}/include/model.h
 	${PROJECT_SOURCE_DIR}/external/imgui/imgui.h
 	${PROJECT_SOURCE_DIR}/external/imgui/backends/imgui_impl_glut.h
 	${PROJECT_SOURCE_DIR}/external/imgui/backends/imgui_impl_opengl3.h)

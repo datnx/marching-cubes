@@ -1,6 +1,6 @@
 #include <fstream>
 #include <iostream>
-#include "vessel.h"
+#include "model.h"
 #include <vector>
 #include <map>
 #include <glm/glm.hpp>
@@ -79,7 +79,7 @@ void push_vertices(int i, int j, int k, char direction, float* pixdim)
     normal_counts.push_back(0);
 }
 
-int load_vessel(std::string file_path)
+int load_model(std::string file_path)
 {
     int edgeTable[256] = {
     0x0  , 0x109, 0x203, 0x30a, 0x406, 0x50f, 0x605, 0x70c,
@@ -596,30 +596,6 @@ int load_vessel(std::string file_path)
     }
     std::cout << "Reading done" << std::endl;
 
-    // debug
-    // delete[] data;
-    // data = new unsigned short[27];
-    // for (int i = 0; i < 27; i++)
-    // {
-    //     if (i == 13)
-    //     {
-    //         data[i] = 1;
-    //     }
-    //     else
-    //     {
-    //         data[i] = 0;
-    //     }
-    // }
-    // dim[1] = 3;
-    // dim[2] = 3;
-    // dim[3] = 3;
-    // pixdim[1] = 145.92;
-    // pixdim[2] = 145.92;
-    // pixdim[3] = 103.2;
-    // pixdim[1] = 1;
-    // pixdim[2] = 1;
-    // pixdim[3] = 1;
-
     // Marching cubes
     unsigned char cube_index;
     unsigned int count = 0;
@@ -882,27 +858,6 @@ int load_vessel(std::string file_path)
         normals[i * 3 + 1] = normal[1];
         normals[i * 3 + 2] = normal[2];
     }
-    
-
-    // std::cout << count << std::endl;
-    // std::cout << num_vertices << std::endl;
-    // for (int i = 0; i < count; i++)
-    // {
-    //     std::cout << normal_counts[i] << std::endl;
-    // }
-    
-    // for (int i = 0; i < count; i++)
-    // {
-    //     std::cout << "vertex " << i << ": (" << vertices[i * 3] << ", " << vertices[i * 3 + 1] << ", " << vertices[i * 3 + 2] << ")\n";
-    // }
-    
-    // for (int i = 0; i < indices.size(); i += 3)
-    // {
-    //     std::cout << indices[i] << " " << indices[i + 1] << " " << indices[i + 2] << std::endl;
-    // }
-    
-    // std::cout << vertices[9] << ", " << vertices[10] << ", " << vertices[11] << std::endl;
-    // std::cout << normals[9] << ", " << normals[10] << ", " << normals[11] << std::endl;
 
     return 1;
 }

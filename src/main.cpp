@@ -5,7 +5,7 @@
 #include <cmath>
 #include "shaders.h"
 #include <stdlib.h>
-#include "vessel.h"
+#include "model.h"
 #include <vector>
 #include <map>
 #include <imgui.h>
@@ -138,7 +138,7 @@ void display() {
             ofn.nFilterIndex = 1;
             ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
             if (GetOpenFileNameA(&ofn) == TRUE) {
-                int ret = load_vessel(ofn.lpstrFile);
+                int ret = load_model(ofn.lpstrFile);
 
                 if (ret == 1)
                 {

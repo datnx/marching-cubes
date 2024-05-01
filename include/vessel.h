@@ -1,1 +1,0 @@
-int load_vessel(std::string file_path);
