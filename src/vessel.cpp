@@ -79,7 +79,7 @@ void push_vertices(int i, int j, int k, char direction, float* pixdim)
     normal_counts.push_back(0);
 }
 
-int load_vessel()
+int load_vessel(std::string file_path)
 {
     int edgeTable[256] = {
     0x0  , 0x109, 0x203, 0x30a, 0x406, 0x50f, 0x605, 0x70c,
@@ -373,7 +373,7 @@ int load_vessel()
     {0, 3, 8, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
     {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};
 
-    std::ifstream infile("patient_1_vessel_red.nii", std::ios::binary);
+    std::ifstream infile(file_path, std::ios::binary);
 
     if (infile.fail())
     {

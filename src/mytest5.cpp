@@ -138,10 +138,18 @@ void display() {
             ofn.nFilterIndex = 1;
             ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
             if (GetOpenFileNameA(&ofn) == TRUE) {
-                std::cout << ofn.lpstrFile << std::endl;
+                int ret = load_vessel(ofn.lpstrFile);
+
+                if (ret == 1)
+                {
+                    std::cout << "Success loading vessel" << std::endl;
+                }
+
+                initobject(0, (GLfloat*)&vertices[0], vertices.size() * 4, (GLfloat*)&colors[0], colors.size() * 4, (GLfloat*)&normals[0], normals.size() * 4, (GLuint*)&indices[0], indices.size() * 4, GL_TRIANGLES);
+
+                start_screen = false;
             }
 
-            start_screen = false;
         }
         ImGui::End();
     }
@@ -317,8 +325,6 @@ void init() {
     glGenVertexArrays(numobjects, VAOs);
     glGenBuffers(numperobj * numobjects, buffers);
 
-    initobject(0, (GLfloat*)&vertices[0], vertices.size() * 4, (GLfloat*)&colors[0], colors.size() * 4, (GLfloat*)&normals[0], normals.size() * 4, (GLuint*)&indices[0], indices.size() * 4, GL_TRIANGLES);
-
     vertexshader = initshaders(GL_VERTEX_SHADER, "shaders/vessel.vert");
     fragmentshader = initshaders(GL_FRAGMENT_SHADER, "shaders/vessel.frag");
     shaderprogram = initprogram(vertexshader, fragmentshader);
@@ -335,13 +341,6 @@ void init() {
 }
 
 int main(int argc, char** argv) {
-
-    int ret = load_vessel();
-
-    if (ret == 1)
-    {
-        std::cout << "Success loading vessel" << std::endl;
-    }
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
