@@ -11,8 +11,11 @@
 #include <imgui.h>
 #include <backends/imgui_impl_glut.h>
 #include <backends/imgui_impl_opengl3.h>
+#include <commdlg.h>
 
 const double M_PI = 3.14159265359;
+
+bool start_screen = true;
 
 extern std::vector<float> vertices;
 extern std::map<int, std::map<int, std::map<int, std::map<char, unsigned int>>>> vertex_map;
@@ -112,9 +115,44 @@ float dot_3d(glm::vec3 vec1, glm::vec3 vec2) {
 }
 
 void display() {
+
+    // Start the Dear ImGui frame
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGLUT_NewFrame();
+    ImGui::NewFrame();
+    ImGuiIO& io = ImGui::GetIO();
+
+    // Start screen
+    if (start_screen) {
+        ImGui::Begin("Open a segmentation (.nii) file");
+        if (ImGui::Button("Open...")) {
+
+            OPENFILENAMEA ofn;
+            CHAR szFile[260] = { 0 };
+            ZeroMemory(&ofn, sizeof(OPENFILENAME));
+            ofn.lStructSize = sizeof(OPENFILENAME);
+            ofn.hwndOwner = FindWindowA(nullptr, "Demo");
+            ofn.lpstrFile = szFile;
+            ofn.nMaxFile = sizeof(szFile);
+            ofn.lpstrFilter = "NIFTI (*.nii)\0*.nii\0";
+            ofn.nFilterIndex = 1;
+            ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+            if (GetOpenFileNameA(&ofn) == TRUE) {
+                std::cout << ofn.lpstrFile << std::endl;
+            }
+
+            start_screen = false;
+        }
+        ImGui::End();
+    }
+
+    // Rendering
+    ImGui::Render();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     drawobject(0);
-    glFlush();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    glutSwapBuffers();
+    glutPostRedisplay();
 }
 
 void mouse(int button, int state, int x, int y) {
@@ -306,7 +344,7 @@ int main(int argc, char** argv) {
     }
 
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowSize(500, 500);
     glutInitWindowPosition(100, 100);
     glutCreateWindow("Demo");
