@@ -6,7 +6,7 @@ I implemented the marching cubes algorithm and used it to visualize 3d segmentat
 ![vessel segmentation](asset/vessel_segmentation.png)
 
 ## Usage
-You will first be prompted to choose a file to visualize. The program supports binary NIFTI file. I have provided a sample file containing the vessel segmentation.
+You will first be prompted to choose a file to visualize. The program supports binary NIFTI file. I have provided a sample file containing the vessel segmentation in the release.
 
 ## Controls
 * `LMB` - drag to rotate.
