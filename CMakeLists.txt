@@ -6,7 +6,7 @@ set(MC_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/include")
 set(GLM_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/external/glm")
 set(GLUT_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/external/freeglut/include")
 set(GLEW_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/external/glew-cmake/include")
-set(IMGUI_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/external/imgui/")
+set(IMGUI_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/external/imgui")
 
 set(MC_SOURCE
 	${PROJECT_SOURCE_DIR}/src/main.cpp
@@ -21,10 +21,7 @@ set(MC_SOURCE
 
 set(MC_HEADERS
 	${PROJECT_SOURCE_DIR}/include/shaders.h
-	${PROJECT_SOURCE_DIR}/include/model.h
-	${PROJECT_SOURCE_DIR}/external/imgui/imgui.h
-	${PROJECT_SOURCE_DIR}/external/imgui/backends/imgui_impl_glut.h
-	${PROJECT_SOURCE_DIR}/external/imgui/backends/imgui_impl_opengl3.h)
+	${PROJECT_SOURCE_DIR}/include/model.h)
 
 add_executable(visualize ${MC_SOURCE} ${MC_HEADERS})
 
