@@ -6,7 +6,10 @@ I implemented the marching cubes algorithm and used it to visualize 3d segmentat
 ![vessel segmentation](asset/vessel_segmentation.png)
 
 ## Usage
-You will first be prompted to choose a file to visualize. The program supports binary NIFTI file. I have provided a sample file containing the vessel segmentation in the release.
+1. Download the latest release [here](https://github.com/datnx/marching-cubes/releases/download/v1.0.0/marching-cubes-v1.0.zip).
+2. Extract archive contents.
+3. Run visualize.exe.
+4. Select the provided NIFTI file or a binary NIFTI file of your own.
 
 ## Controls
 * `LMB` - drag to rotate.
